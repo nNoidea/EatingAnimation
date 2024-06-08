@@ -9,7 +9,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.SynchronousResourceReloader;
@@ -49,10 +48,9 @@ public abstract class DrawContextLegacyMixin implements SynchronousResourceReloa
         return this.vertexConsumers;
     }
 
-    @SuppressWarnings("all")
     @Inject(method = "drawItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;IIII)V", at = @At("HEAD"), cancellable = true)
     void innerRenderInGui(LivingEntity entity, World world, ItemStack stack, int x, int y, int seed, int z, CallbackInfo ci) {
-        if (!stack.isEmpty() && stack.contains(DataComponentTypes.FOOD)) {
+        if (!stack.isEmpty() && stack.isFood()) {
             BakedModel bakedModel = this.client.getItemRenderer().getModels().getModel(stack);
             this.matrices.push();
             this.matrices.translate((float)(x + 8), (float)(y + 8), (float)(150 + (bakedModel.hasDepth() ? z : 0)));
